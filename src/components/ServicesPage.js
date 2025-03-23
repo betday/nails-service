@@ -75,8 +75,7 @@ const ServicesPage = () => {
   };
 
   return (
-    <div>
-      
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Box className="select-area">
         <Typography variant="h4" className="section-title" data-aos="fade-up">
           Lựa chọn khu vực
@@ -104,7 +103,6 @@ const ServicesPage = () => {
           ))}
         </Grid>
 
-       
         {selectedArea && (
           <Box sx={{ marginTop: '30px', textAlign: 'center' }}>
             <Typography variant="h5">Các địa điểm tại {areas[selectedArea].name}</Typography>
@@ -126,25 +124,24 @@ const ServicesPage = () => {
                     />
                     
                     {location.homeService && (
-  <Box sx={{
-    marginTop: '10px',
-    padding: '6px 12px',
-    backgroundColor: '#FFD700', 
-    color: '#333',
-    borderRadius: '15px',
-    fontWeight: '600',
-    fontSize: '14px',
-    display: 'inline-block',
-    textTransform: 'capitalize',
-    letterSpacing: '0.5px', 
-  }}>
-    Dịch vụ tại nhà
-  </Box>
-)}
+                      <Box sx={{
+                        marginTop: '10px',
+                        padding: '6px 12px',
+                        backgroundColor: '#FFD700', 
+                        color: '#333',
+                        borderRadius: '15px',
+                        fontWeight: '600',
+                        fontSize: '14px',
+                        display: 'inline-block',
+                        textTransform: 'capitalize',
+                        letterSpacing: '0.5px', 
+                      }}>
+                        Dịch vụ tại nhà
+                      </Box>
+                    )}
                     <Link to={`/location/${location.id}`}>
-  <Button className="button" sx={{ marginTop: '15px' }}>Xem chi tiết</Button>
-</Link>
-
+                      <Button className="button" sx={{ marginTop: '15px' }}>Xem chi tiết</Button>
+                    </Link>
                   </Box>
                 </Grid>
               ))}
@@ -152,6 +149,8 @@ const ServicesPage = () => {
           </Box>
         )}
       </Box>
+
+      
     </div>
   );
 };

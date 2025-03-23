@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Box, Typography, Grid, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css'; 
 import '../assets/css/HomePage.css'; 
+
 
 const HomePage = () => {
   useEffect(() => {
@@ -21,7 +21,7 @@ const HomePage = () => {
 
   return (
     <div>
-    
+     
 
       {/* Banner */}
       <Box className="banner">

@@ -26,7 +26,7 @@ const PaymentPage = () => {
   };
 
   return (
-    <Box sx={{ textAlign: 'center', marginTop: '50px' }}>
+    <Box sx={{ textAlign: 'center', marginTop: '120px' }}>
       <Typography variant="h4" gutterBottom sx={{ marginTop: '80px' }}>
         Thanh Toán Đặt Lịch
       </Typography>
@@ -57,13 +57,11 @@ const PaymentPage = () => {
         </Button>
       </Box>
 
-      {/* Styled booking information */}
       <Box sx={{ marginTop: '40px' }} className="booking-info-container">
         <Typography className="booking-info-header">
           Thông Tin Đặt Lịch:
         </Typography>
 
-        {/* Booking Info Row */}
         <div className="booking-info-row">
           <div className="booking-info-label"><strong>Dịch vụ:</strong></div>
           <div className="booking-info-value">{bookingData.services}</div>

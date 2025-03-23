@@ -6,26 +6,6 @@
   min-height: 100vh;
 }
 
-.header {
-  background-color: #ff4c80;
-  color: #fff;
-  padding: 20px 0;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
-}
-
-.header .logo {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  justify-content: center;
-}
-
-.header .logo img {
-  border-radius: 50%;
-}
-
 h4,
 h6 {
   font-weight: 600;

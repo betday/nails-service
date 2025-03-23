@@ -1,10 +1,8 @@
-/*General */
 .container {
   width: 80%;
   margin: 20px auto;
 }
 
-/*activity card */
 .activity-card {
   background-color: #fff;
   padding: 20px;
@@ -31,7 +29,6 @@
   margin-bottom: 15px;
 }
 
-/* Status */
 .status {
   font-weight: bold;
   margin-top: 15px;

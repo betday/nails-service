@@ -58,7 +58,7 @@ const ActivitiesPage = () => {
       <Typography
   variant="h5"
   sx={{
-    marginTop: '80px', 
+    marginTop: '120px', 
     marginBottom: '40px', 
     fontWeight: 'bold',
     fontSize: '28px',

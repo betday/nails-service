@@ -7,8 +7,6 @@ import thaomong from '../assets/img/thaomong.png';
 
 const LocationDetailPage = () => {
     const { id } = useParams();
-  
-    // Areas and locations data
     const areas = {
       camLe: {
         name: "Quận Cẩm Lệ",
@@ -307,7 +305,7 @@ const LocationDetailPage = () => {
  return (
      <div>
         
-         <Box sx={{ padding: '20px', backgroundColor: '#f9f9f9', marginTop: '60px' }}>
+         <Box sx={{ padding: '20px', backgroundColor: '#f9f9f9', marginTop: '120px' }}>
              <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
                  {selectedLocation.name}
              </Typography>
