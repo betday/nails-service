@@ -2,39 +2,40 @@ import React from 'react';
 import { Box, Typography, Grid, Button, IconButton } from '@mui/material';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useAuth } from '../context/AuthContext'; 
-import '../assets/css/Header.css'; 
+import { useAuth } from '../context/AuthContext';
+import '../assets/css/Header.css';
 
 const Header = () => {
-  const location = useLocation(); 
-  const navigate = useNavigate(); 
-  const { isLoggedIn, user, logout } = useAuth(); 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { isLoggedIn, user, logout } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
   const handleLoginClick = () => {
-    navigate('/login'); 
+    navigate('/login');
   };
 
   const handleLogout = () => {
-    logout(); 
-    navigate('/login'); 
+    logout();
+    navigate('/login');
   };
 
   return (
     <Box className="header">
       <Grid container justifyContent="space-between" alignItems="center" className="header-content">
-        <Grid item className="logo">
-          <img src={require('../assets/img/Logo.png')} alt="Logo" width="50" />
-          <Typography variant="h4">PINK</Typography>
-        </Grid>
+      <Grid item className="logo">
+  <img src={require('../assets/img/Logo.png')} alt="Logo" width="50" />
+  <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#E91E63' }}>PINK</Typography>
+</Grid>
+
 
         <Grid item xs={12} md={6} className="navbar">
           <nav>
-            <ul style={{ display: 'flex', padding: 0 }}>
+            <ul className="nav-list">
               <li>
                 <Link to="/" style={{ textDecoration: 'none' }}>
-                  <Button 
+                  <Button
                     className={`nav-button ${isActive('/') ? 'active' : ''}`}
                   >
                     Trang Chủ
@@ -43,7 +44,7 @@ const Header = () => {
               </li>
               <li>
                 <Link to="/about" style={{ textDecoration: 'none' }}>
-                  <Button 
+                  <Button
                     className={`nav-button ${isActive('/about') ? 'active' : ''}`}
                   >
                     Giới Thiệu
@@ -52,7 +53,7 @@ const Header = () => {
               </li>
               <li>
                 <Link to="/services" style={{ textDecoration: 'none' }}>
-                  <Button 
+                  <Button
                     className={`nav-button ${isActive('/services') ? 'active' : ''}`}
                   >
                     Dịch Vụ
@@ -77,7 +78,9 @@ const Header = () => {
         <Grid item>
           {isLoggedIn ? (
             <Box display="flex" alignItems="center" className="user-info">
-              <Typography sx={{ color: '#fff', marginRight: '10px' }}>{user.email}</Typography>
+              <Typography sx={{ color: '#fff', marginRight: '10px' }}>
+                {user.email}
+              </Typography>
               <IconButton sx={{ color: '#fff' }} onClick={() => navigate('/profile')}>
                 <AccountCircleIcon fontSize="large" />
               </IconButton>
@@ -93,7 +96,7 @@ const Header = () => {
                     backgroundColor: '#D81B60',
                     borderColor: '#D81B60',
                     color: '#fff',
-                  }
+                  },
                 }}
               >
                 Đăng xuất
@@ -107,9 +110,9 @@ const Header = () => {
               sx={{
                 textTransform: 'none',
                 backgroundColor: '#E91E63',
-                padding: '10px 20px',
+                padding: '12px 24px',
                 borderRadius: '30px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                 fontSize: '16px',
                 fontWeight: '600',
                 transition: 'all 0.3s ease-in-out',
@@ -120,7 +123,7 @@ const Header = () => {
                 },
                 '&:active': {
                   transform: 'translateY(2px)',
-                }
+                },
               }}
             >
               Đăng Nhập

@@ -147,9 +147,11 @@
     flex-direction: column;
     gap: 10px;
   }
+
   .navbar ul li {
     text-align: center;
   }
+
   .user-info {
     justify-content: center;
   }

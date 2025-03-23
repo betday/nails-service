@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Header from './components/Header'; 
-import Footer from './components/Footer'; 
+import Header from './components/Header';
+import Footer from './components/Footer';
 
 // Lazy load các trang
 const HomePage = React.lazy(() => import('./components/HomePage'));
@@ -26,11 +26,11 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <div className="app-container">
+        <div className="app-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           {/* Header */}
           <Header />
 
-          <main className="content">
+          <main style={{ flexGrow: 1 }}>
             {/* Suspense cho lazy load */}
             <Suspense fallback={<div>Loading...</div>}>
               <Routes>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Grid, Typography, Select, MenuItem, FormControl, InputLabel, Avatar, Checkbox, ListItemText, TextField, Box, InputAdornment, IconButton, Switch, FormControlLabel } from '@mui/material';
-import { useNavigate, useLocation } from 'react-router-dom'; 
+import { useNavigate, useLocation } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import AddIcon from '@mui/icons-material/Add';
@@ -8,12 +8,11 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import '../assets/css/BookAppointmentPage.css';
 
 const BookAppointmentPage = () => {
-  const location = useLocation(); 
-  const navigate = useNavigate(); 
-  
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { locationName, locationAddress, serviceName, serviceImage, homeService } = location.state || {};
-  
+
   // Initial state
   const [date, setDate] = useState(new Date());
   const [technicians, setTechnicians] = useState(['']);
@@ -23,14 +22,11 @@ const BookAppointmentPage = () => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   const [isHomeService, setIsHomeService] = useState(homeService || false); 
-
-
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [numAttending, setNumAttending] = useState(1);
 
- 
   const technicianList = [
     { name: "Kỹ Thuật Viên 1", image: "/path/to/technician1.jpg" },
     { name: "Kỹ Thuật Viên 2", image: "/path/to/technician2.jpg" },
@@ -151,7 +147,7 @@ const BookAppointmentPage = () => {
       services: services.join(', '),
       technicians: technicians.join(', '),
       notes,
-      location: locationName || 'Nailroom Quang Trung', 
+      location: locationName , 
       isHomeService,
     };
 
@@ -162,12 +158,20 @@ const BookAppointmentPage = () => {
   return (
     <div className="book-appointment-page">
 
-      <Box sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f3f0f5' }}>
+      <Box sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f3f0f5', marginTop: '100px'  }}>
+        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+          Đặt lịch tại   {locationName}
+        </Typography>
+        <Typography variant="h6" sx={{ marginTop: '10px' }}>
+          Địa chỉ: {locationAddress}
+        </Typography>
+
         <FormControlLabel
           control={<Switch checked={isHomeService} onChange={() => setIsHomeService(prev => !prev)} />}
           label={isHomeService ? "Chọn Dịch Vụ Tại Nhà" : "Chọn Dịch Vụ Tại Tiệm"}
         />
       </Box>
+
 
       <div className="form-group">
         <Typography variant="h6">Please enter your full name</Typography>
@@ -303,7 +307,6 @@ const BookAppointmentPage = () => {
         ))}
       </div>
 
-    
       <div className="form-group">
         <TextField
           fullWidth

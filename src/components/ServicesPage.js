@@ -10,7 +10,7 @@ const ServicesPage = () => {
     camLe: {
       name: "Quận Cẩm Lệ",
       locations: [
-        { id: "camle-1", name: "Nailroom Quang Trung", address: "20 Quang Trung, Hoàn Kiếm, Hà Nội", price: "200,000 VND", homeService: true },
+        { id: "camle-1", name: "Nailroom Quang Trung", address: "20 Quang Trung, Cẩm Lệ, Đà Nẵng", price: "200,000 VND", homeService: true },
         { id: "camle-2", name: "Nailroom Lê Văn Hiến", address: "105 Lê Văn Hiến, Cẩm Lệ, Đà Nẵng", price: "150,000 VND", homeService: false },
         { id: "camle-3", name: "Nail Salon Cẩm Lệ", address: "45 Phạm Văn Đồng, Cẩm Lệ, Đà Nẵng", price: "180,000 VND", homeService: true },
         { id: "camle-4", name: "Nail Stylist Minh Anh", address: "12 Hoàng Văn Thụ, Cẩm Lệ, Đà Nẵng", price: "220,000 VND", homeService: true },
@@ -20,7 +20,7 @@ const ServicesPage = () => {
     haiChau: {
       name: "Quận Hải Châu",
       locations: [
-        { id: "haichau-1", name: "Nailroom Hoàng Minh Giám", address: "29 N7B Trung Hòa - Nhân Chính, Thanh Xuân, Hà Nội", price: "210,000 VND", homeService: false },
+        { id: "haichau-1", name: "Nailroom Hoàng Minh Giám", address: "29 N7B Trung Hòa - Nhân Chính, Hải Châu, Đà Nẵng", price: "210,000 VND", homeService: false },
         { id: "haichau-2", name: "Hải Châu Nails", address: "23 Đường Duy Tân, Hải Châu, Đà Nẵng", price: "170,000 VND", homeService: true },
         { id: "haichau-3", name: "Nail Star Hải Châu", address: "91 Nguyễn Văn Linh, Hải Châu, Đà Nẵng", price: "190,000 VND", homeService: true },
         { id: "haichau-4", name: "Nailhouse Hoàng Anh", address: "10 Lê Duẩn, Hải Châu, Đà Nẵng", price: "230,000 VND", homeService: false },
@@ -30,7 +30,7 @@ const ServicesPage = () => {
     lienChieu: {
       name: "Quận Liên Chiểu",
       locations: [
-        { id: "lienchieu-1", name: "Nailroom Hoàng Ngân", address: "149 Hoàng Ngân, phường Trung Hòa, Cầu Giấy, Hà Nội", price: "220,000 VND", homeService: true },
+        { id: "lienchieu-1", name: "Nailroom Hoàng Ngân", address: "149 Hoàng Ngân, phường Trung Hòa, Liên Chiểu, Đà Nẵng", price: "220,000 VND", homeService: true },
         { id: "lienchieu-2", name: "Liên Chiểu Nails", address: "12 Nguyễn An Ninh, Liên Chiểu, Đà Nẵng", price: "190,000 VND", homeService: false },
         { id: "lienchieu-3", name: "Nail Tech Liên Chiểu", address: "88 Trường Chinh, Liên Chiểu, Đà Nẵng", price: "200,000 VND", homeService: true },
         { id: "lienchieu-4", name: "Liên Chiểu Nail Studio", address: "54 Âu Cơ, Liên Chiểu, Đà Nẵng", price: "210,000 VND", homeService: false },
@@ -69,9 +69,8 @@ const ServicesPage = () => {
     }
   };
 
- 
-  const handleAreaClick = (area) => {
-    setSelectedArea(area);
+  const handleAreaClick = (areaKey) => {
+    setSelectedArea(areaKey);
   };
 
   return (
@@ -107,8 +106,8 @@ const ServicesPage = () => {
           <Box sx={{ marginTop: '30px', textAlign: 'center' }}>
             <Typography variant="h5">Các địa điểm tại {areas[selectedArea].name}</Typography>
             <Grid container spacing={4} sx={{ marginTop: '20px' }} justifyContent="center">
-              {areas[selectedArea].locations.map((location, index) => (
-                <Grid item xs={12} sm={4} key={index}>
+              {areas[selectedArea].locations.map((location) => (
+                <Grid item xs={12} sm={4} key={location.id}>
                   <Box className="location-card">
                     <Typography variant="h6" className="location-title">{location.name}</Typography>
                     <Typography variant="body2" className="location-address">{location.address}</Typography>
@@ -122,7 +121,7 @@ const ServicesPage = () => {
                         color: '#333',
                       }}
                     />
-                    
+
                     {location.homeService && (
                       <Box sx={{
                         marginTop: '10px',
@@ -139,9 +138,27 @@ const ServicesPage = () => {
                         Dịch vụ tại nhà
                       </Box>
                     )}
-                    <Link to={`/location/${location.id}`}>
-                      <Button className="button" sx={{ marginTop: '15px' }}>Xem chi tiết</Button>
-                    </Link>
+                    <Link
+  to={`/location/${location.id}`}   
+  style={{ textDecoration: 'none' }}
+>
+  <Button
+    variant="contained"
+    color="primary"
+    sx={{
+      marginTop: '20px',
+      padding: '12px 25px',
+      fontWeight: 'bold',
+      backgroundColor: '#E91E63',
+      '&:hover': {
+        backgroundColor: '#D81B60'
+      }
+    }}
+  >
+    Xem chi tiết
+  </Button>
+</Link>
+
                   </Box>
                 </Grid>
               ))}
@@ -149,8 +166,6 @@ const ServicesPage = () => {
           </Box>
         )}
       </Box>
-
-      
     </div>
   );
 };

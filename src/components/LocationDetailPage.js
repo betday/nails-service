@@ -291,88 +291,71 @@ const LocationDetailPage = () => {
     };
   
 
- let selectedLocation = null;
- for (let areaKey in areas) {
-     selectedLocation = areas[areaKey].locations.find(location => location.id === id);
-     if (selectedLocation) break;
- }
+ 
+    let selectedLocation = null;
+    for (let areaKey in areas) {
+        selectedLocation = areas[areaKey].locations.find(location => location.id === id);
+        if (selectedLocation) break;
+    }
 
+    if (!selectedLocation) {
+        return <Typography variant="h5">Location not found</Typography>;
+    }
 
- if (!selectedLocation) {
-     return <Typography variant="h5">Location not found</Typography>;
- }
+    return (
+        <div>
+            <Box sx={{ padding: '20px', backgroundColor: '#f9f9f9', marginTop: '120px' }}>
+                <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
+                    {selectedLocation.name}
+                </Typography>
+                <Typography variant="h6" sx={{ marginTop: '10px' }}>
+                    {selectedLocation.address}
+                </Typography>
+                <Typography variant="body1" sx={{ marginTop: '20px' }}>
+                    {selectedLocation.description}
+                </Typography>
 
- return (
-     <div>
-        
-         <Box sx={{ padding: '20px', backgroundColor: '#f9f9f9', marginTop: '120px' }}>
-             <Typography variant="h3" sx={{ fontWeight: 'bold' }}>
-                 {selectedLocation.name}
-             </Typography>
-             <Typography variant="h6" sx={{ marginTop: '10px' }}>
-                 {selectedLocation.address}
-             </Typography>
-             <Typography variant="body1" sx={{ marginTop: '20px' }}>
-                 {selectedLocation.description}
-             </Typography>
+                {selectedLocation.homeService && (
+                    <Typography variant="body2" sx={{ color: '#f44336', marginTop: '10px', fontStyle: 'italic' }}>
+                        Dịch Vụ Tại Nhà Available! Liên hệ để biết thêm chi tiết.
+                    </Typography>
+                )}
+            </Box>
 
-           
-             {selectedLocation.homeService && (
-                 <Typography variant="body2" sx={{ color: '#f44336', marginTop: '10px', fontStyle: 'italic' }}>
-                     Dịch Vụ Tại Nhà Available! Liên hệ để biết thêm chi tiết.
-                 </Typography>
-             )}
-         </Box>
-
-       
-         <Box sx={{ padding: '20px', backgroundColor: '#fff', marginTop: '20px' }}>
-             <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-                 Dịch Vụ tại {selectedLocation.name}
-             </Typography>
-             <Grid container spacing={3} sx={{ marginTop: '20px' }}>
-                 {selectedLocation.services.map((service, index) => (
-                     <Grid item xs={12} sm={6} md={4} key={index}>
-                         <Link
-                             to={{
-                                 pathname: `/book-appointment`,
-                                 state: {
-                                     locationName: selectedLocation.name,
-                                     locationAddress: selectedLocation.address,
-                                     serviceName: service.name,
-                                     serviceImage: service.image,
-                                     homeService: selectedLocation.homeService 
-                                 }
-                             }}
-                             style={{ textDecoration: 'none' }}
-                         >
-                             <Paper
-                                 elevation={3}
-                                 sx={{
-                                     padding: '20px',
-                                     textAlign: 'center',
-                                     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                                     '&:hover': {
-                                         transform: 'scale(1.05)',
-                                         boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
-                                     }
-                                 }}
-                             >
-                                 <img
-                                     src={service.image}
-                                     alt={service.name}
-                                     style={{ width: '100%', height: 'auto', objectFit: 'cover' }}
-                                 />
-                                 <Typography variant="h6" sx={{ fontWeight: 'bold', marginTop: '15px' }}>
-                                     {service.name}
-                                 </Typography>
-                             </Paper>
-                         </Link>
-                     </Grid>
-                 ))}
-             </Grid>
-         </Box>
-     </div>
- );
+            <Box sx={{ padding: '20px', backgroundColor: '#fff', marginTop: '20px' }}>
+                <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+                    Đặt Lịch Ngay Tại {selectedLocation.name}
+                </Typography>
+                <Link
+                    to={{
+                        pathname: `/book-appointment`,
+                        state: {
+                            locationName: selectedLocation.name,
+                            locationAddress: selectedLocation.address,
+                            homeService: selectedLocation.homeService 
+                        }
+                    }}
+                    style={{ textDecoration: 'none' }}
+                >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            marginTop: '20px',
+                            padding: '12px 25px',
+                            fontWeight: 'bold',
+                            backgroundColor: '#E91E63',
+                            '&:hover': {
+                                backgroundColor: '#D81B60'
+                            }
+                        }}
+                    >
+                        Đặt Lịch Ngay
+                    </Button>
+                </Link>
+            </Box>
+        </div>
+    );
 };
 
 export default LocationDetailPage;

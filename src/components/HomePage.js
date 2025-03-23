@@ -23,16 +23,15 @@ const HomePage = () => {
     <div>
      
 
-      {/* Banner */}
+ 
       <Box className="banner">
         <Typography variant="h2" className="title">Dịch Vụ Làm Nails Chuyên Nghiệp</Typography>
         <Typography variant="h5" className="description">Đặt lịch ngay để trải nghiệm dịch vụ đẳng cấp tại nhà hoặc tiệm.</Typography>
         <Button variant="contained" color="secondary" size="large">Đặt lịch ngay</Button>
       </Box>
 
-      {/* BLOG Pink Section */}
       <Box className="blog-section">
-        <Typography variant="h4" className="section-title" data-aos="fade-up">BLOG Pink</Typography>
+        <Typography variant="h4" className="section-title" data-aos="fade-up">BLOG PINK</Typography>
         <Grid container spacing={4} sx={{ textAlign: 'center' }} data-aos="fade-up">
           <Grid item xs={12} sm={4}>
             <Box className="blog-card">
@@ -73,21 +72,20 @@ const HomePage = () => {
           <img src={require('../assets/img/slogan.jpg')} alt="NailRoom" className="nailroom-image" />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="h4" className="nailroom-title">VỚI NAIL ROOM</Typography>
+            <Typography variant="h4" className="nailroom-title">VỚI Pink</Typography>
             <Typography variant="h5" className="nailroom-subtitle">"AI CŨNG CÓ THỂ TRỞ NÊN ĐẸP HƠN"</Typography>
             <Typography variant="body1" className="nailroom-description">
-              Xuất phát là một hệ thống Nail Hàn Quốc, Nail Room luôn đặt trọn vẹn trái tim & tâm huyết vào việc làm đẹp cho các nàng.
+              Xuất phát là một hệ thống Nail tại Đà Nẵng, Pink luôn đặt trọn vẹn trái tim & tâm huyết vào việc làm đẹp cho các nàng.
             </Typography>
             <Typography variant="body1" className="nailroom-description">
-              Bởi thế, slogan của Nail Room là “Ai cũng có thể trở nên đẹp hơn”. Đến với Nail Room và ra về như những phụ nữ xinh đẹp hơn, hạnh phúc hơn là điều chúng mình hướng tới.
+              Bởi thế, slogan của Pink là “Ai cũng có thể trở nên đẹp hơn”. Đến với Pink và ra về như những phụ nữ xinh đẹp hơn, hạnh phúc hơn là điều chúng mình hướng tới.
             </Typography>
             <Button className="button" sx={{ marginRight: '20px' }}>Giới Thiệu</Button>
-            <Button className="button">Hệ Thống NailRoom</Button>
+            <Button className="button">Hệ Thống Pink</Button>
           </Grid>
         </Grid>
       </Box>
 
-      {/* Achievements */}
       <Box className="achievements-section">
         <Typography variant="h4" className="section-title" data-aos="fade-up">THÀNH TỰU VÀ CÁC LỢI ÍCH</Typography>
         <Grid container spacing={4} sx={{ textAlign: 'center' }} data-aos="fade-up">
