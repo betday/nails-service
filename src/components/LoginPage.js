@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { TextField, Button, Typography, Grid, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import { useAuth } from '../context/AuthContext'; 
+import '../assets/css/login.css'
+import log from '../assets/img/log.svg';
+import register from '../assets/img/register.svg';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -29,49 +32,114 @@ const LoginPage = () => {
     }
   };
 
+  const [isSignUpMode, setIsSignUpMode] = useState(false);
+
+  const handleSignUpClick = () => {
+    setIsSignUpMode(true);
+  };
+
+  const handleSignInClick = () => {
+    setIsSignUpMode(false);
+  };
+
   return (
-    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh', backgroundColor: '#F7F1F1' }}>
-      <Grid item xs={12} sm={8} md={6} lg={4}>
-        <Paper elevation={3} style={{ padding: '30px 40px', borderRadius: '12px' }}>
-          <Typography variant="h4" align="center" gutterBottom>
-            Đăng nhập
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <Box mt={2}>
-              <TextField
-                fullWidth
-                label="Email"
-                variant="outlined"
-                margin="normal"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <TextField
-                fullWidth
-                label="Mật khẩu"
-                type="password"
-                variant="outlined"
-                margin="normal"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Box>
-            <Box mt={3}>
-              <Button fullWidth variant="contained" color="primary" type="submit">
-                Đăng nhập
-              </Button>
-            </Box>
+    <div className={`container ${isSignUpMode ? "sign-up-mode" : ""}`}>
+      <div className="forms-container">
+        <div className="signin-signup">
+          {/* Form đăng nhập */}
+          <form action="#" className="sign-in-form">
+            <h2 className="title">Sign in</h2>
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input type="text" placeholder="Username" />
+            </div>
+            <div className="input-field">
+              <i className="fas fa-lock"></i>
+              <input type="password" placeholder="Password" />
+            </div>
+            <input type="submit" value="Login" className="btn solid" />
+            <p className="social-text">Or Sign in with social platforms</p>
+            <div className="social-media">
+              <a href="#" className="social-icon">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-google"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
           </form>
-          {errorMessage && (
-            <Box mt={2} color="red" textAlign="center">
-              <Typography variant="body2">{errorMessage}</Typography>
-            </Box>
-          )}
-        </Paper>
-      </Grid>
-    </Grid>
+
+          {/* Form đăng ký */}
+          <form action="#" className="sign-up-form">
+            <h2 className="title">Sign up</h2>
+            <div className="input-field">
+              <i className="fas fa-user"></i>
+              <input type="text" placeholder="Username" />
+            </div>
+            <div className="input-field">
+              <i className="fas fa-envelope"></i>
+              <input type="email" placeholder="Email" />
+            </div>
+            <div className="input-field">
+              <i className="fas fa-lock"></i>
+              <input type="password" placeholder="Password" />
+            </div>
+            <input type="submit" className="btn" value="Sign up" />
+            <p className="social-text">Or Sign up with social platforms</p>
+            <div className="social-media">
+              <a href="#" className="social-icon">
+                <i className="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-twitter"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-google"></i>
+              </a>
+              <a href="#" className="social-icon">
+                <i className="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Panels */}
+      <div className="panels-container">
+        <div className="panel left-panel">
+          <div className="content">
+            <h3>New here ?</h3>
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
+              ex ratione. Aliquid!
+            </p>
+            <button className="btn transparent" onClick={handleSignUpClick}>
+              Sign up
+            </button>
+          </div>
+          <img src={log} className="image" alt="" />
+        </div>
+        <div className="panel right-panel">
+          <div className="content">
+            <h3>One of us ?</h3>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+              laboriosam ad deleniti.
+            </p>
+            <button className="btn transparent" onClick={handleSignInClick}>
+              Sign in
+            </button>
+          </div>
+          <img src={register} className="image" alt="" />
+        </div>
+      </div>
+    </div>
   );
 };
 
