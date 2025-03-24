@@ -16,9 +16,10 @@ const Footer = () => {
       <Container maxWidth="lg">
         <Grid container spacing={4}>
           <Grid item xs={12} sm={4}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '20px', color: '#FFCOB9' }}>
-              PINK
-            </Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '20px', color: '#E91E63' }}>
+  PINK
+</Typography>
+
             <Typography variant="body2" sx={{ marginBottom: '10px', color: '#FFCOB9' }}>
               Địa chỉ: FPT, Ngũ Hành Sơn, Đà Nẵng.
             </Typography>
@@ -31,9 +32,10 @@ const Footer = () => {
           </Grid>
 
           <Grid item xs={12} sm={4}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '20px', color: '#FFCOB9' }}>
-              Liên Kết
-            </Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '20px', color: '#E91E63' }}>
+  Liên Kết
+</Typography>
+
             <ul style={{ listStyle: 'none', padding: 0 }}>
               <li><Link href="/" sx={{ color: '#FFCOB9', textDecoration: 'none' }}>Trang Chủ</Link></li>
               <li><Link href="/about" sx={{ color: '#FFCOB9', textDecoration: 'none' }}>Giới Thiệu</Link></li>
@@ -43,9 +45,10 @@ const Footer = () => {
           </Grid>
 
           <Grid item xs={12} sm={4}>
-            <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '20px', color: '#FFCOB9' }}>
-              Kết Nối Với Chúng Tôi
-            </Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: '20px', color: '#E91E63' }}>
+  Kết Nối Với Chúng Tôi
+</Typography>
+
             <Box>
               <IconButton color="inherit" href="https://facebook.com" target="_blank">
                 <Facebook sx={{ color: '#FFCOB9' }} />

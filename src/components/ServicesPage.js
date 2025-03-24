@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography, Grid, Button, Chip } from '@mui/material';
-import { Link } from 'react-router-dom'; 
-import '../assets/css/servicespage.css'; 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import '../assets/css/servicespage.css';
 
 const ServicesPage = () => {
   const [selectedArea, setSelectedArea] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const areas = {
     camLe: {
@@ -69,8 +71,16 @@ const ServicesPage = () => {
     }
   };
 
+  useEffect(() => {
+    const areaFromUrl = new URLSearchParams(location.search).get('area');
+    if (areaFromUrl) {
+      setSelectedArea(areaFromUrl);
+    }
+  }, [location]);
+
   const handleAreaClick = (areaKey) => {
     setSelectedArea(areaKey);
+    navigate(`?area=${areaKey}`);
   };
 
   return (
@@ -84,16 +94,25 @@ const ServicesPage = () => {
           {Object.keys(areas).map((areaKey) => (
             <Grid item key={areaKey}>
               <Button
-                variant={selectedArea === areaKey ? 'contained' : 'outlined'}
-                color="primary"
+                variant="outlined"
                 onClick={() => handleAreaClick(areaKey)}
                 sx={{
                   textTransform: 'none',
-                  padding: '10px 20px',
-                  margin: '5px',
-                  fontWeight: 'bold',
+                  padding: '14px 30px',
+                  margin: '12px',
+                  fontWeight: 600,
+                  fontSize: '1.1rem',
+                  borderRadius: '50px',
                   backgroundColor: selectedArea === areaKey ? '#E91E63' : 'white',
+                  border: '2px solid #E91E63',
                   color: selectedArea === areaKey ? 'white' : '#E91E63',
+                  transition: 'all 0.3s ease-in-out',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: '#D81B60',
+                    color: 'white',
+                    transform: 'scale(1.05)',
+                  },
                 }}
               >
                 {areas[areaKey].name}
@@ -104,7 +123,17 @@ const ServicesPage = () => {
 
         {selectedArea && (
           <Box sx={{ marginTop: '30px', textAlign: 'center' }}>
-            <Typography variant="h5">Các địa điểm tại {areas[selectedArea].name}</Typography>
+            <Typography
+  variant="h5"
+  sx={{
+    color: '#E91E63',
+    fontWeight: 'bold',
+    marginBottom: '20px',
+  }}
+>
+  Các địa điểm tại {areas[selectedArea].name}
+</Typography>
+
             <Grid container spacing={4} sx={{ marginTop: '20px' }} justifyContent="center">
               {areas[selectedArea].locations.map((location) => (
                 <Grid item xs={12} sm={4} key={location.id}>
@@ -121,44 +150,37 @@ const ServicesPage = () => {
                         color: '#333',
                       }}
                     />
-
                     {location.homeService && (
                       <Box sx={{
                         marginTop: '10px',
                         padding: '6px 12px',
-                        backgroundColor: '#FFD700', 
+                        backgroundColor: '#FFD700',
                         color: '#333',
                         borderRadius: '15px',
                         fontWeight: '600',
                         fontSize: '14px',
                         display: 'inline-block',
                         textTransform: 'capitalize',
-                        letterSpacing: '0.5px', 
-                      }}>
+                        letterSpacing: '0.5px',
+                      }} >
                         Dịch vụ tại nhà
                       </Box>
                     )}
-                    <Link
-  to={`/location/${location.id}`}   
-  style={{ textDecoration: 'none' }}
->
-  <Button
-    variant="contained"
-    color="primary"
-    sx={{
-      marginTop: '20px',
-      padding: '12px 25px',
-      fontWeight: 'bold',
-      backgroundColor: '#E91E63',
-      '&:hover': {
-        backgroundColor: '#D81B60'
-      }
-    }}
-  >
-    Xem chi tiết
-  </Button>
-</Link>
-
+                    <Link to={`/location/${location.id}`} style={{ textDecoration: 'none' }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                          marginTop: '20px',
+                          padding: '12px 25px',
+                          fontWeight: 'bold',
+                          backgroundColor: '#E91E63',
+                          '&:hover': { backgroundColor: '#D81B60' }
+                        }}
+                      >
+                        Xem chi tiết
+                      </Button>
+                    </Link>
                   </Box>
                 </Grid>
               ))}

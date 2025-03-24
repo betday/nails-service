@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, Typography, Select, MenuItem, FormControl, InputLabel, Avatar, Checkbox, ListItemText, TextField, Box, InputAdornment, IconButton, Switch, FormControlLabel } from '@mui/material';
+import { Button, Grid, Typography, Select, MenuItem, FormControl, InputLabel, Avatar, Checkbox, ListItemText, TextField, Box, IconButton, Switch, FormControlLabel } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -13,7 +13,7 @@ const BookAppointmentPage = () => {
 
   const { locationName, locationAddress, serviceName, serviceImage, homeService } = location.state || {};
 
-  // Initial state
+
   const [date, setDate] = useState(new Date());
   const [technicians, setTechnicians] = useState(['']);
   const [selectedTime, setSelectedTime] = useState('');
@@ -49,11 +49,11 @@ const BookAppointmentPage = () => {
   ];
 
   const availableServices = [
-    { name: "Bộ Sản Phẩm", duration: "30 phút", price: "138,000 ₫" },
-    { name: "Callus Removal", duration: "30 phút", price: "250,000 ₫" },
-    { name: "Nối Mi - Kiểu Classic", duration: "60 phút", price: "250,000 ₫" },
-    { name: "Nối Mi - Kiểu Kylie", duration: "70 phút", price: "330,000 ₫" },
-    { name: "Uốn Mi", duration: "40 phút", price: "220,000 ₫" },
+    { name: "Cắt móng", duration: "30 phút", price: "138,000 ₫" },
+    { name: "Sơn", duration: "30 phút", price: "250,000 ₫" },
+    { name: "Móng giả - Kiểu Classic", duration: "60 phút", price: "250,000 ₫" },
+    { name: "Móng giả - Kiểu Kylie", duration: "70 phút", price: "330,000 ₫" },
+    { name: "Đính đá", duration: "40 phút", price: "220,000 ₫" },
   ];
 
   const today = new Date();
@@ -139,6 +139,26 @@ const BookAppointmentPage = () => {
     });
   };
 
+
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    
+ 
+    services.flat().forEach((serviceName) => {
+      const found = availableServices.find(s => s.name === serviceName);
+      if (found) {
+        totalPrice += parseFloat(found.price.replace(/[^\d]/g, ''));
+      }
+    });
+    
+    return totalPrice;
+  };
+
+  useEffect(() => {
+   
+    calculateTotalPrice();
+  }, [services]);
+
   const handleConfirmAppointment = () => {
     const bookingData = {
       fullName,
@@ -147,8 +167,9 @@ const BookAppointmentPage = () => {
       services: services.join(', '),
       technicians: technicians.join(', '),
       notes,
-      location: locationName , 
+      location: locationName, 
       isHomeService,
+      totalPrice: calculateTotalPrice()  
     };
 
     alert("Bạn đang trong thời gian giữ chỗ, vui lòng thanh toán trong 10 phút!");
@@ -157,10 +178,9 @@ const BookAppointmentPage = () => {
 
   return (
     <div className="book-appointment-page">
-
-      <Box sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f3f0f5', marginTop: '100px'  }}>
+      <Box sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f3f0f5', marginTop: '30px'  }}>
         <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-          Đặt lịch tại   {locationName}
+          Đặt lịch tại {locationName}
         </Typography>
         <Typography variant="h6" sx={{ marginTop: '10px' }}>
           Địa chỉ: {locationAddress}
@@ -171,7 +191,6 @@ const BookAppointmentPage = () => {
           label={isHomeService ? "Chọn Dịch Vụ Tại Nhà" : "Chọn Dịch Vụ Tại Tiệm"}
         />
       </Box>
-
 
       <div className="form-group">
         <Typography variant="h6">Please enter your full name</Typography>
@@ -191,7 +210,6 @@ const BookAppointmentPage = () => {
               <Grid item>
                 <Typography variant="h6">Number of attending</Typography>
               </Grid>
-
               <Grid item>
                 <IconButton 
                   onClick={() => handleNumAttendingChange('decrease')} 
@@ -205,13 +223,11 @@ const BookAppointmentPage = () => {
                   <RemoveIcon />
                 </IconButton>
               </Grid>
-
               <Grid item>
                 <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333' }} >
                   {numAttending}
                 </Typography>
               </Grid>
-
               <Grid item>
                 <IconButton 
                   onClick={() => handleNumAttendingChange('increase')} 
@@ -318,6 +334,10 @@ const BookAppointmentPage = () => {
           variant="outlined"
         />
       </div>
+
+      <Typography variant="h6" sx={{ marginTop: '20px' }}>
+        Tổng Giá: {calculateTotalPrice().toLocaleString()} ₫
+      </Typography>
 
       <Button
         variant="contained"

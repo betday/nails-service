@@ -25,19 +25,30 @@ body {
   letter-spacing: 1px;
 }
 
-.select-area button {
+.area-button {
   text-transform: none;
   padding: 14px 30px;
   margin: 12px;
   font-weight: 600;
   font-size: 1.1rem;
   border-radius: 50px;
-  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
-  background-color: #fff;
+  transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out,
+    color 0.3s ease-in-out;
+  background-color: white;
   border: 2px solid #e91e63;
   color: #e91e63;
   cursor: pointer;
   outline: none;
+}
+
+.area-button:hover {
+  background-color: #d81b60;
+  color: white;
+}
+
+.area-button.selected {
+  background-color: #e91e63;
+  color: white;
 }
 
 .select-area button:hover {
@@ -48,52 +59,6 @@ body {
 
 .select-area button:active {
   transform: scale(1);
-}
-
-.select-area button.selected {
-  background-color: #e91e63;
-  color: white;
-  border: 2px solid #e91e63;
-}
-
-.footer {
-  background-color: #f3f0f5;
-  padding: 20px 0;
-  text-align: center;
-  margin-top: auto;
-  width: 100%;
-}
-
-.footer .footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.footer .footer-links {
-  margin-top: 15px;
-}
-
-.footer .footer-links a {
-  color: #e91e63;
-  text-decoration: none;
-  margin: 0 10px;
-}
-
-.footer .footer-links a:hover {
-  text-decoration: underline;
-}
-
-.footer .footer-social {
-  margin-top: 15px;
-}
-
-.footer .footer-social a {
-  color: #e91e63;
-  margin: 0 10px;
-}
-
-.footer .footer-social a:hover {
-  color: #333;
 }
 
 .location-card {
@@ -162,10 +127,6 @@ body {
 .location-card .button:hover {
   background-color: #d81b60;
   transform: scale(1.05);
-}
-
-.location-card .button:active {
-  transform: scale(1);
 }
 
 @media (max-width: 768px) {

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
 import { QRCodeCanvas } from 'qrcode.react';
 import '../assets/css/Payment.css';
+
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -13,6 +14,36 @@ const PaymentPage = () => {
     return <Typography variant="h5">No booking data found.</Typography>;
   }
 
+
+  const availableServices = [
+    { name: "Cắt móng", price: "138,000 ₫" },
+    { name: "Sơn", price: "250,000 ₫" },
+    { name: "Móng giả - Kiểu Classic", price: "250,000 ₫" },
+    { name: "Móng giả - Kiểu Kylie", price: "330,000 ₫" },
+    { name: "Đính đá", price: "220,000 ₫" },
+  ];
+
+ 
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    const servicesList = bookingData.services.split(',').map(service => service.trim());
+
+    console.log("Selected Services:", servicesList);
+
+    servicesList.forEach(service => {
+      const foundService = availableServices.find(s => s.name.toLowerCase() === service.toLowerCase());
+
+      if (foundService) {
+        const price = foundService.price.replace(/[^\d.-]/g, '');  
+        console.log(`Service: ${service}, Price: ${price}`);
+        totalPrice += parseFloat(price);  
+      }
+    });
+
+    console.log("Total Price Calculated:", totalPrice);
+    return totalPrice;
+  };
+
   const saveBookingDataToLocalStorage = () => {
     const existingHistory = JSON.parse(localStorage.getItem('bookingHistory')) || [];
     existingHistory.push(bookingData);
@@ -20,6 +51,7 @@ const PaymentPage = () => {
     localStorage.setItem('bookingData', JSON.stringify(bookingData));
   };
 
+ 
   const handlePaymentConfirmation = () => {
     saveBookingDataToLocalStorage();
     navigate('/activities'); 
@@ -35,9 +67,10 @@ const PaymentPage = () => {
         Bạn đang trong thời gian giữ chỗ. Vui lòng thanh toán trong 10 phút.
       </Typography>
 
+
       <Box sx={{ marginTop: '20px' }}>
         <QRCodeCanvas
-          value="https://www.example.com/payment-link" 
+          value="https://www.example.com/payment-link"
           size={256}
           level="H"
         />
@@ -48,9 +81,9 @@ const PaymentPage = () => {
       </Box>
 
       <Box sx={{ marginTop: '30px' }}>
-        <Button 
-          variant="contained" 
-          color="primary" 
+        <Button
+          variant="contained"
+          color="primary"
           onClick={handlePaymentConfirmation}
         >
           Xác Nhận Thanh Toán
@@ -85,6 +118,11 @@ const PaymentPage = () => {
         <div className="booking-info-row">
           <div className="booking-info-label"><strong>Ghi chú:</strong></div>
           <div className="booking-info-value">{bookingData.notes}</div>
+        </div>
+
+        <div className="booking-info-row">
+          <div className="booking-info-label"><strong>Tổng Giá:</strong></div>
+          <div className="booking-info-value">{calculateTotalPrice().toLocaleString()} ₫</div>
         </div>
 
         <div className="booking-info-divider"></div>
