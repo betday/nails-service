@@ -12,7 +12,7 @@ const LoginPage = () => {
 
  
   const mockAccounts = [
-    { email: 'c@gmail.com', password: '123' },
+    { email: 'c9@gmail.com', password: '123' },
     { email: 'admin@example.com', password: 'admin123' },
   ];
 
