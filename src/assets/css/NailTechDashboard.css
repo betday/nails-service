@@ -1,0 +1,88 @@
+/* NailTechDashboard.css */
+.nail-tech-dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nail-tech-dashboard h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+}
+
+.nail-tech-dashboard table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.nail-tech-dashboard th,
+.nail-tech-dashboard td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.nail-tech-dashboard th {
+    background-color: #6c5ce7;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.nail-tech-dashboard tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.nail-tech-dashboard tr:last-child {
+    border-bottom: none;
+}
+
+.nail-tech-dashboard tr:hover {
+    background-color: #f1f1f1;
+}
+
+.nail-tech-dashboard select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nail-tech-dashboard select:hover {
+    border-color: #6c5ce7;
+    background-color: #fff;
+}
+
+.nail-tech-dashboard select:focus {
+    outline: none;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 5px rgba(108, 92, 231, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nail-tech-dashboard table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .nail-tech-dashboard th,
+    .nail-tech-dashboard td {
+        padding: 10px;
+        font-size: 0.8rem;
+    }
+
+    .nail-tech-dashboard h1 {
+        font-size: 2rem;
+    }
+}

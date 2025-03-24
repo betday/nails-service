@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Grid, Box, Paper } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; 
-import { useAuth } from '../context/AuthContext'; 
-import '../assets/css/login.css'
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import '../assets/css/login.css';
 import log from '../assets/img/log.svg';
 import register from '../assets/img/register.svg';
 
@@ -11,22 +10,31 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
- 
+  // Mock accounts với role (user hoặc admin)
   const mockAccounts = [
-    { email: 'user@example.com', password: '123' },
-    { email: 'admin@example.com', password: 'admin123' },
+    { email: 'user@example.com', password: '123', role: 'user' },
+    { email: 'admin@example.com', password: 'admin123', role: 'admin' },
+    { email: 'staff@example.com', password: 'staff123', role: 'staff' },
   ];
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
+
+    // Tìm tài khoản phù hợp
     const account = mockAccounts.find(acc => acc.email === email && acc.password === password);
-    
+
     if (account) {
-      login(account); 
-      navigate('/'); 
+      login(account); // Lưu thông tin đăng nhập vào context
+      if (account.role === 'admin') {
+        navigate('/admintech'); // Điều hướng đến trang admin
+      } else if (account.role === 'staff') {
+        navigate('/nailtech');
+      }
+       else {
+        navigate('/'); // Điều hướng đến trang chính
+      }
     } else {
       setErrorMessage('Thông tin đăng nhập không đúng');
     }
@@ -47,16 +55,27 @@ const LoginPage = () => {
       <div className="forms-container">
         <div className="signin-signup">
           {/* Form đăng nhập */}
-          <form action="#" className="sign-in-form">
+          <form onSubmit={handleSubmit} className="sign-in-form">
             <h2 className="title">Sign in</h2>
             <div className="input-field">
               <i className="fas fa-user"></i>
-              <input type="text" placeholder="Username" />
+              <input
+                type="text"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="input-field">
               <i className="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
             <input type="submit" value="Login" className="btn solid" />
             <p className="social-text">Or Sign in with social platforms</p>
             <div className="social-media">

@@ -11,6 +11,8 @@ const BookAppointmentPage = React.lazy(() => import('./components/BookAppointmen
 const PaymentPage = React.lazy(() => import('./components/PaymentPage'));
 const ActivitiesPage = React.lazy(() => import('./components/ActivitiesPage'));
 const LoginPage = React.lazy(() => import('./components/LoginPage'));
+const AdminTechDashboard = React.lazy(() => import('./components/AdminTechDashboard'));
+const NailTechDashboard = React.lazy(() => import('./components/NailTechDashboardPage'));
 const LocationDetailPage = React.lazy(() => import('./components/LocationDetailPage'));
 const AboutPage = React.lazy(() => import('./components/AboutPage'));
 
@@ -36,6 +38,8 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/nailtech" element={<NailTechDashboard />} />
+                <Route path="/admintech" element={<AdminTechDashboard />} />
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/book-appointment" element={<BookAppointmentPage />} />
                 <Route path="/payment" element={<PaymentPage />} />
