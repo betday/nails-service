@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, Typography, Select, MenuItem, FormControl, InputLabel, Avatar, Checkbox, ListItemText, TextField, Box, IconButton, Switch, FormControlLabel } from '@mui/material';
+import {
+  Button, Grid, Typography, Select, MenuItem, FormControl,
+  InputLabel, Avatar, Checkbox, ListItemText, TextField,
+  Box, IconButton
+} from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
@@ -7,21 +11,21 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import '../assets/css/BookAppointmentPage.css';
 
+import areas from '../data/areasData'; // ✅ import dữ liệu trung tâm
+
 const BookAppointmentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const { locationName, locationAddress, serviceName, serviceImage, homeService } = location.state || {};
-
 
   const [date, setDate] = useState(new Date());
   const [technicians, setTechnicians] = useState(['']);
   const [selectedTime, setSelectedTime] = useState('');
-  const [services, setServices] = useState([serviceName || '']);
+  const [services, setServices] = useState([[]]);
   const [notes, setNotes] = useState('');
   const [availableTimes, setAvailableTimes] = useState([]);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
-  const [isHomeService, setIsHomeService] = useState(homeService || false); 
+  const [isHomeService, setIsHomeService] = useState(homeService || false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
@@ -48,13 +52,10 @@ const BookAppointmentPage = () => {
     { time: "20:00", status: "available" },
   ];
 
-  const availableServices = [
-    { name: "Cắt móng", duration: "30 phút", price: "138,000 ₫" },
-    { name: "Sơn", duration: "30 phút", price: "250,000 ₫" },
-    { name: "Móng giả - Kiểu Classic", duration: "60 phút", price: "250,000 ₫" },
-    { name: "Móng giả - Kiểu Kylie", duration: "70 phút", price: "330,000 ₫" },
-    { name: "Đính đá", duration: "40 phút", price: "220,000 ₫" },
-  ];
+  // ✅ Lấy danh sách dịch vụ theo locationName
+  const allLocations = Object.values(areas).flatMap(area => area.locations);
+  const matchedLocation = allLocations.find(loc => loc.name === locationName);
+  const availableServices = matchedLocation?.services || [];
 
   const today = new Date();
   const nextWeek = new Date();
@@ -67,11 +68,8 @@ const BookAppointmentPage = () => {
 
     if (selectedDateString === todayString) {
       return times.filter((time) => {
-        const timeHour = parseInt(time.time.split(":")[0]);
-        const timeMinutes = parseInt(time.time.split(":")[1]);
-        const timeInHours = timeHour + timeMinutes / 60;
-
-        return timeInHours >= currentTime && time.status === 'available';
+        const [hour, minute] = time.time.split(':').map(Number);
+        return (hour + minute / 60) >= currentTime && time.status === 'available';
       });
     } else if (date <= nextWeek) {
       return times;
@@ -85,50 +83,36 @@ const BookAppointmentPage = () => {
   }, [date]);
 
   useEffect(() => {
-    if (date && fullName && selectedTime && services.length > 0) {
-      setIsButtonEnabled(true); 
+    const allServicesSelected = services.every(s => s.length > 0);
+    const allTechniciansSelected = technicians.every(t => t !== '');
+    if (date && fullName && selectedTime && allServicesSelected && allTechniciansSelected) {
+      setIsButtonEnabled(true);
     } else {
-      setIsButtonEnabled(false); 
+      setIsButtonEnabled(false);
     }
-  }, [date, fullName, selectedTime, services]);
+  }, [date, fullName, selectedTime, services, technicians]);
 
-  const handleDateChange = (date) => {
-    setDate(date);
-  };
-
-  const handleTechnicianChange = (event, index) => {
-    const updatedTechnicians = [...technicians];
-    updatedTechnicians[index] = event.target.value;
-    setTechnicians(updatedTechnicians);
+  const handleDateChange = (date) => setDate(date);
+  const handleTechnicianChange = (e, index) => {
+    const updated = [...technicians];
+    updated[index] = e.target.value;
+    setTechnicians(updated);
   };
 
   const handleTimeChange = (time) => {
-    if (time.status === "available") {
-      setSelectedTime(time.time);
-    }
+    if (time.status === "available") setSelectedTime(time.time);
   };
 
   const handleServiceChange = (event, index) => {
-    const updatedServices = [...services];
-    updatedServices[index] = event.target.value;
-    setServices(updatedServices);
+    const updated = [...services];
+    updated[index] = event.target.value;
+    setServices(updated);
   };
 
-  const handleNotesChange = (event) => {
-    setNotes(event.target.value);
-  };
-
-  const handlePhoneNumberChange = (event) => {
-    setPhoneNumber(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleFullNameChange = (event) => {
-    setFullName(event.target.value);
-  };
+  const handleNotesChange = (e) => setNotes(e.target.value);
+  const handlePhoneNumberChange = (e) => setPhoneNumber(e.target.value);
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleFullNameChange = (e) => setFullName(e.target.value);
 
   const handleNumAttendingChange = (action) => {
     setNumAttending(prev => {
@@ -139,215 +123,182 @@ const BookAppointmentPage = () => {
     });
   };
 
-
   const calculateTotalPrice = () => {
-    let totalPrice = 0;
-    
- 
-    services.flat().forEach((serviceName) => {
-      const found = availableServices.find(s => s.name === serviceName);
-      if (found) {
-        totalPrice += parseFloat(found.price.replace(/[^\d]/g, ''));
-      }
+    let total = 0;
+    services.forEach(serviceList => {
+      serviceList.forEach(serviceName => {
+        const service = availableServices.find(s => s.name === serviceName);
+        if (service?.price) {
+          total += parseFloat(service.price.replace(/[^\d]/g, ''));
+        }
+      });
     });
-    
-    return totalPrice;
+    return total;
   };
-
-  useEffect(() => {
-   
-    calculateTotalPrice();
-  }, [services]);
 
   const handleConfirmAppointment = () => {
     const bookingData = {
       fullName,
+      phoneNumber,
+      email,
       date: date.toLocaleDateString(),
       time: selectedTime,
-      services: services.join(', '),
+      services: services,
+
       technicians: technicians.join(', '),
       notes,
-      location: locationName, 
+      location: locationName,
+      address: locationAddress,
       isHomeService,
-      totalPrice: calculateTotalPrice()  
+      totalPrice: calculateTotalPrice()
     };
 
     alert("Bạn đang trong thời gian giữ chỗ, vui lòng thanh toán trong 10 phút!");
     navigate("/payment", { state: { bookingData } });
   };
 
+  const getAvailableTechnicians = (index) => {
+    const selectedTechnicians = technicians.filter((_, i) => i !== index);
+    return technicianList.filter(tech => !selectedTechnicians.includes(tech.name));
+  };
+
   return (
     <div className="book-appointment-page">
-      <Box sx={{ padding: '20px', textAlign: 'center', backgroundColor: '#f3f0f5', marginTop: '30px'  }}>
-        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
-          Đặt lịch tại {locationName}
-        </Typography>
-        <Typography variant="h6" sx={{ marginTop: '10px' }}>
-          Địa chỉ: {locationAddress}
+      <Box sx={{ p: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Đặt Lịch Hẹn tại {locationName}
         </Typography>
 
-        <FormControlLabel
-          control={<Switch checked={isHomeService} onChange={() => setIsHomeService(prev => !prev)} />}
-          label={isHomeService ? "Chọn Dịch Vụ Tại Nhà" : "Chọn Dịch Vụ Tại Tiệm"}
+        <TextField
+          label="Họ và Tên"
+          fullWidth
+          value={fullName}
+          onChange={handleFullNameChange}
+          sx={{ mb: 2 }}
         />
-      </Box>
 
-      <div className="form-group">
-        <Typography variant="h6">Please enter your full name</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Full Name"
-              value={fullName}
-              onChange={handleFullNameChange}
-              variant="outlined"
-            />
-          </Grid>
+        <TextField
+          label="Số điện thoại"
+          fullWidth
+          value={phoneNumber}
+          onChange={handlePhoneNumberChange}
+          sx={{ mb: 2 }}
+        />
 
-          <Grid item xs={12}>
-            <Grid container alignItems="center" justifyContent="center" spacing={2}>
-              <Grid item>
-                <Typography variant="h6">Number of attending</Typography>
-              </Grid>
-              <Grid item>
-                <IconButton 
-                  onClick={() => handleNumAttendingChange('decrease')} 
-                  disabled={numAttending <= 1} 
-                  sx={{
-                    backgroundColor: '#f2f2f2',
-                    '&:hover': { backgroundColor: '#e0e0e0' },
-                    borderRadius: '50%',
-                  }}
-                >
-                  <RemoveIcon />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333' }} >
-                  {numAttending}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <IconButton 
-                  onClick={() => handleNumAttendingChange('increase')} 
-                  sx={{
-                    backgroundColor: '#f2f2f2',
-                    '&:hover': { backgroundColor: '#e0e0e0' },
-                    borderRadius: '50%',
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </div>
+        <TextField
+          label="Email"
+          fullWidth
+          value={email}
+          onChange={handleEmailChange}
+          sx={{ mb: 2 }}
+        />
 
-      <div className="form-group">
-        <Typography variant="h6">Ngày hẹn:</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Typography variant="body1" sx={{ mr: 2 }}>
+            Số người:
+          </Typography>
+          <IconButton onClick={() => handleNumAttendingChange('decrease')} disabled={numAttending <= 1}>
+            <RemoveIcon />
+          </IconButton>
+          <Typography variant="body1" sx={{ mx: 2 }}>
+            {numAttending}
+          </Typography>
+          <IconButton onClick={() => handleNumAttendingChange('increase')}>
+            <AddIcon />
+          </IconButton>
+        </Box>
+
+        {[...Array(numAttending)].map((_, index) => (
+          <Box key={index} sx={{ mb: 3 }}>
+            <Typography variant="subtitle1">Khách {index + 1}</Typography>
+
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Chọn Kỹ Thuật Viên</InputLabel>
+              <Select
+                value={technicians[index]}
+                onChange={(e) => handleTechnicianChange(e, index)}
+              >
+                {getAvailableTechnicians(index).map((tech) => (
+                  <MenuItem key={tech.name} value={tech.name}>
+                    <Avatar src={tech.image} sx={{ mr: 1 }} />
+                    {tech.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel>Chọn Dịch Vụ</InputLabel>
+              <Select
+                multiple
+                value={services[index]}
+                onChange={(e) => handleServiceChange(e, index)}
+                renderValue={(selected) => selected.join(', ')}
+              >
+                {availableServices.map((service) => (
+                  <MenuItem key={service.name} value={service.name}>
+                    <Checkbox checked={services[index].indexOf(service.name) > -1} />
+                    <ListItemText primary={`${service.name} (${service.price})`} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        ))}
+
         <DatePicker
           selected={date}
           onChange={handleDateChange}
           dateFormat="dd/MM/yyyy"
-          inline
-          minDate={today}
+          minDate={new Date()}
           maxDate={nextWeek}
+          className="date-picker"
         />
-      </div>
 
-      <div className="form-group">
-        <Typography variant="h6">Chọn Kỹ Thuật Viên</Typography>
-        {Array.from({ length: numAttending }).map((_, index) => (
-          <FormControl fullWidth key={index}>
-            <InputLabel>Chọn Kỹ Thuật Viên {index + 1}</InputLabel>
-            <Select
-              value={technicians[index] || ''}
-              onChange={(event) => handleTechnicianChange(event, index)}
-              label={`Chọn Kỹ Thuật Viên ${index + 1}`}
-            >
-              {technicianList.map((tech, techIndex) => (
-                <MenuItem value={tech.name} key={techIndex}>
-                  <Grid container alignItems="center">
-                    <Grid item>
-                      <Avatar alt={tech.name} src={tech.image} style={{ marginRight: '10px' }} />
-                    </Grid>
-                    <Grid item>{tech.name}</Grid>
-                  </Grid>
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        ))}
-      </div>
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="
+::contentReference[oaicite:0]{index=0}
+ 
+          body1">Chọn giờ:</Typography>
+          <Grid container spacing={1}>
+            {availableTimes.map((timeObj) => (
+              <Grid item key={timeObj.time}>
+                <Button
+                  variant={selectedTime === timeObj.time ? "contained" : "outlined"}
+                  onClick={() => handleTimeChange(timeObj)}
+                  disabled={timeObj.status !== 'available'}
+                >
+                  {timeObj.time}
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
 
-      <div className="form-group">
-        <Typography variant="h6">Chọn Giờ:</Typography>
-        <Grid container spacing={2}>
-          {availableTimes.map((time, index) => (
-            <Grid item xs={2} key={index}>
-              <Button
-                variant="outlined"
-                onClick={() => handleTimeChange(time)} 
-                disabled={time.status === 'full'}
-                className={`time-btn ${time.status === 'available' ? (selectedTime === time.time ? 'time-btn available selected' : 'time-btn available') : 'time-btn full'}`}
-              >
-                {time.time}
-              </Button>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
-
-      <div className="form-group">
-        <Typography variant="h6">Chọn Dịch Vụ</Typography>
-        {Array.from({ length: numAttending }).map((_, index) => (
-          <FormControl fullWidth key={index}>
-            <InputLabel>Chọn Dịch Vụ {index + 1}</InputLabel>
-            <Select
-              multiple
-              value={services[index] || []} 
-              onChange={(event) => handleServiceChange(event, index)}
-              label={`Chọn Dịch Vụ ${index + 1}`}
-              renderValue={(selected) => selected.join(', ')}
-            >
-              {availableServices.map((service, serviceIndex) => (
-                <MenuItem value={service.name} key={serviceIndex}>
-                  <Checkbox checked={services[index] && services[index].indexOf(service.name) > -1} />
-                  <ListItemText primary={service.name} secondary={`${service.duration} - ${service.price}`} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        ))}
-      </div>
-
-      <div className="form-group">
         <TextField
-          fullWidth
           label="Ghi chú"
+          fullWidth
           multiline
-          rows={4}
+          rows={3}
           value={notes}
           onChange={handleNotesChange}
-          variant="outlined"
+          sx={{ mt: 3 }}
         />
-      </div>
 
-      <Typography variant="h6" sx={{ marginTop: '20px' }}>
-        Tổng Giá: {calculateTotalPrice().toLocaleString()} ₫
-      </Typography>
+        <Typography variant="h6" sx={{ mt: 3 }}>
+          Tổng Giá: {calculateTotalPrice().toLocaleString()} ₫
+        </Typography>
 
-      <Button
-        variant="contained"
-        color="primary"
-        className="confirm-btn"
-        disabled={!isButtonEnabled}
-        onClick={handleConfirmAppointment} 
-      >
-        Xác Nhận Đặt Lịch
-      </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mt: 3 }}
+          onClick={handleConfirmAppointment}
+          disabled={!isButtonEnabled}
+        >
+          Xác Nhận Đặt Lịch
+        </Button>
+      </Box>
     </div>
   );
 };

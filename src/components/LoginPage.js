@@ -1,31 +1,28 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Grid, Box, Paper } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; 
-import { useAuth } from '../context/AuthContext'; 
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import accountApi from '../api/accountApi';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
- 
-  const mockAccounts = [
-    { email: 'c9@gmail.com', password: '123' },
-    { email: 'admin@example.com', password: 'admin123' },
-  ];
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    const account = mockAccounts.find(acc => acc.email === email && acc.password === password);
-    
-    if (account) {
-      login(account); 
-      navigate('/'); 
-    } else {
-      setErrorMessage('Thông tin đăng nhập không đúng');
+
+    try {
+      const res = await accountApi.login({ email, password }); // backend expects email & password
+      const { token, user } = res.data;
+
+      login({ token, user });
+      navigate('/');
+    } catch (err) {
+      console.error('Login failed:', err.response?.data || err.message);
+      setErrorMessage('Email hoặc mật khẩu không đúng');
     }
   };
 

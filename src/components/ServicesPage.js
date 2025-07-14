@@ -1,192 +1,293 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid, Button, Chip } from '@mui/material';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Box, Typography, Grid, Button, Chip, TextField,
+  InputAdornment, IconButton
+} from '@mui/material';
+import { Link } from 'react-router-dom';
+import {
+  MapContainer, TileLayer, Marker, Popup, useMap
+} from 'react-leaflet';
+import { getDistance } from 'geolib';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
 import '../assets/css/servicespage.css';
+import areas from '../data/areasData';
 
-const ServicesPage = () => {
-  const [selectedArea, setSelectedArea] = useState(null);
-  const location = useLocation();
-  const navigate = useNavigate();
+// Configure default marker
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
 
-  const areas = {
-    camLe: {
-      name: "Quận Cẩm Lệ",
-      locations: [
-        { id: "camle-1", name: "Nailroom Quang Trung", address: "20 Quang Trung, Cẩm Lệ, Đà Nẵng", price: "200,000 VND", homeService: true },
-        { id: "camle-2", name: "Nailroom Lê Văn Hiến", address: "105 Lê Văn Hiến, Cẩm Lệ, Đà Nẵng", price: "150,000 VND", homeService: false },
-        { id: "camle-3", name: "Nail Salon Cẩm Lệ", address: "45 Phạm Văn Đồng, Cẩm Lệ, Đà Nẵng", price: "180,000 VND", homeService: true },
-        { id: "camle-4", name: "Nail Stylist Minh Anh", address: "12 Hoàng Văn Thụ, Cẩm Lệ, Đà Nẵng", price: "220,000 VND", homeService: true },
-        { id: "camle-5", name: "Nailroom Hồng Hà", address: "33 Hùng Vương, Cẩm Lệ, Đà Nẵng", price: "250,000 VND", homeService: false },
-      ]
-    },
-    haiChau: {
-      name: "Quận Hải Châu",
-      locations: [
-        { id: "haichau-1", name: "Nailroom Hoàng Minh Giám", address: "29 N7B Trung Hòa - Nhân Chính, Hải Châu, Đà Nẵng", price: "210,000 VND", homeService: false },
-        { id: "haichau-2", name: "Hải Châu Nails", address: "23 Đường Duy Tân, Hải Châu, Đà Nẵng", price: "170,000 VND", homeService: true },
-        { id: "haichau-3", name: "Nail Star Hải Châu", address: "91 Nguyễn Văn Linh, Hải Châu, Đà Nẵng", price: "190,000 VND", homeService: true },
-        { id: "haichau-4", name: "Nailhouse Hoàng Anh", address: "10 Lê Duẩn, Hải Châu, Đà Nẵng", price: "230,000 VND", homeService: false },
-        { id: "haichau-5", name: "Viva Nails Hải Châu", address: "56 Bạch Đằng, Hải Châu, Đà Nẵng", price: "260,000 VND", homeService: true },
-      ]
-    },
-    lienChieu: {
-      name: "Quận Liên Chiểu",
-      locations: [
-        { id: "lienchieu-1", name: "Nailroom Hoàng Ngân", address: "149 Hoàng Ngân, phường Trung Hòa, Liên Chiểu, Đà Nẵng", price: "220,000 VND", homeService: true },
-        { id: "lienchieu-2", name: "Liên Chiểu Nails", address: "12 Nguyễn An Ninh, Liên Chiểu, Đà Nẵng", price: "190,000 VND", homeService: false },
-        { id: "lienchieu-3", name: "Nail Tech Liên Chiểu", address: "88 Trường Chinh, Liên Chiểu, Đà Nẵng", price: "200,000 VND", homeService: true },
-        { id: "lienchieu-4", name: "Liên Chiểu Nail Studio", address: "54 Âu Cơ, Liên Chiểu, Đà Nẵng", price: "210,000 VND", homeService: false },
-        { id: "lienchieu-5", name: "Nail Style Liên Chiểu", address: "78 Nguyễn Tất Thành, Liên Chiểu, Đà Nẵng", price: "240,000 VND", homeService: true },
-      ]
-    },
-    nguHanhSon: {
-      name: "Quận Ngũ Hành Sơn",
-      locations: [
-        { id: "nguhanhson-1", name: "Nailroom Sơn Trà", address: "23 Sơn Trà, Ngũ Hành Sơn, Đà Nẵng", price: "200,000 VND", homeService: true },
-        { id: "nguhanhson-2", name: "Sơn Trà Nails", address: "32 Nguyễn Tất Thành, Ngũ Hành Sơn, Đà Nẵng", price: "180,000 VND", homeService: false },
-        { id: "nguhanhson-3", name: "Nail House Ngũ Hành Sơn", address: "56 Hòa Hải, Ngũ Hành Sơn, Đà Nẵng", price: "210,000 VND", homeService: true },
-        { id: "nguhanhson-4", name: "Sơn Trà Nail Studio", address: "101 Đỗ Quang, Ngũ Hành Sơn, Đà Nẵng", price: "230,000 VND", homeService: false },
-        { id: "nguhanhson-5", name: "Nailworld Ngũ Hành Sơn", address: "67 Trường Sa, Ngũ Hành Sơn, Đà Nẵng", price: "250,000 VND", homeService: true },
-      ]
-    },
-    sonTra: {
-      name: "Quận Sơn Trà",
-      locations: [
-        { id: "sontra-1", name: "Sơn Trà Nail Lounge", address: "22 Trường Sa, Sơn Trà, Đà Nẵng", price: "220,000 VND", homeService: false },
-        { id: "sontra-2", name: "Nail Studio Sơn Trà", address: "8 Lê Quang Đạo, Sơn Trà, Đà Nẵng", price: "190,000 VND", homeService: true },
-        { id: "sontra-3", name: "Sơn Trà Nails & Spa", address: "33 Hòa Quý, Sơn Trà, Đà Nẵng", price: "200,000 VND", homeService: true },
-        { id: "sontra-4", name: "Sơn Trà Nail Bar", address: "66 Trần Phú, Sơn Trà, Đà Nẵng", price: "240,000 VND", homeService: false },
-        { id: "sontra-5", name: "Sơn Trà Nail & Beauty", address: "77 Sơn Trà, Đà Nẵng", price: "250,000 VND", homeService: true },
-      ]
-    },
-    thanhKhe: {
-      name: "Quận Thanh Khê",
-      locations: [
-        { id: "thanhkhe-1", name: "Thanh Khê Nails", address: "20 Đống Đa, Thanh Khê, Đà Nẵng", price: "210,000 VND", homeService: true },
-        { id: "thanhkhe-2", name: "Nailroom Thanh Khê", address: "10 Nguyễn Văn Linh, Thanh Khê, Đà Nẵng", price: "180,000 VND", homeService: false },
-        { id: "thanhkhe-3", name: "Nail Bar Thanh Khê", address: "45 Trường Chinh, Thanh Khê, Đà Nẵng", price: "190,000 VND", homeService: true },
-        { id: "thanhkhe-4", name: "Thanh Khê Nail Art", address: "32 Hồ Tùng Mậu, Thanh Khê, Đà Nẵng", price: "200,000 VND", homeService: false },
-        { id: "thanhkhe-5", name: "Nailhouse Thanh Khê", address: "99 Lê Đình Dương, Thanh Khê, Đà Nẵng", price: "220,000 VND", homeService: true },
-      ]
-    }
-  };
+const redIcon = new L.Icon({
+  iconUrl: require('../assets/img/marker-icon-red.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
+const MapCenterUpdater = ({ center }) => {
+  const map = useMap();
   useEffect(() => {
-    const areaFromUrl = new URLSearchParams(location.search).get('area');
-    if (areaFromUrl) {
-      setSelectedArea(areaFromUrl);
+    if (center) {
+      map.setView(center, 13);
     }
-  }, [location]);
+  }, [center, map]);
+  return null;
+};
 
-  const handleAreaClick = (areaKey) => {
-    setSelectedArea(areaKey);
-    navigate(`?area=${areaKey}`);
+const ZoomToUserButton = ({ searchedPosition, userPosition }) => {
+  const map = useMap();
+
+  const handleClick = () => {
+    const targetPosition = searchedPosition || userPosition;
+
+    if (
+      Array.isArray(targetPosition) &&
+      targetPosition.length === 2 &&
+      typeof targetPosition[0] === 'number' &&
+      typeof targetPosition[1] === 'number'
+    ) {
+      map.flyTo(targetPosition, 16, { animate: true });
+    } else {
+      alert('Không có vị trí nào để hiển thị.');
+    }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Box className="select-area">
-        <Typography variant="h4" className="section-title" data-aos="fade-up">
-          Lựa chọn khu vực
-        </Typography>
+    <div
+      style={{
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 1000,
+        backgroundColor: 'white',
+        padding: '8px',
+        borderRadius: '4px',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.2)',
+        cursor: 'pointer'
+      }}
+      onClick={handleClick}
+      title="Đến vị trí hiển thị"
+    >
+      📍
+    </div>
+  );
+};
 
-        <Grid container spacing={2} justifyContent="center" data-aos="fade-up">
-          {Object.keys(areas).map((areaKey) => (
-            <Grid item key={areaKey}>
-              <Button
-                variant="outlined"
-                onClick={() => handleAreaClick(areaKey)}
-                sx={{
-                  textTransform: 'none',
-                  padding: '14px 30px',
-                  margin: '12px',
-                  fontWeight: 600,
-                  fontSize: '1.1rem',
-                  borderRadius: '50px',
-                  backgroundColor: selectedArea === areaKey ? '#E91E63' : 'white',
-                  border: '2px solid #E91E63',
-                  color: selectedArea === areaKey ? 'white' : '#E91E63',
-                  transition: 'all 0.3s ease-in-out',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: '#D81B60',
-                    color: 'white',
-                    transform: 'scale(1.05)',
-                  },
-                }}
-              >
-                {areas[areaKey].name}
-              </Button>
-            </Grid>
-          ))}
-        </Grid>
+const isInDaNangBoundary = ([lat, lng]) => {
+  return lat >= 15.9 && lat <= 16.2 && lng >= 108.0 && lng <= 108.35;
+};
 
-        {selectedArea && (
-          <Box sx={{ marginTop: '30px', textAlign: 'center' }}>
-            <Typography
-  variant="h5"
-  sx={{
-    color: '#E91E63',
-    fontWeight: 'bold',
-    marginBottom: '20px',
-  }}
->
-  Các địa điểm tại {areas[selectedArea].name}
-</Typography>
+const ServicesPage = () => {
+  const [userPosition, setUserPosition] = useState(null);
+  const [searchAddress, setSearchAddress] = useState('');
+  const [searchedPosition, setSearchedPosition] = useState(null);
 
-            <Grid container spacing={4} sx={{ marginTop: '20px' }} justifyContent="center">
-              {areas[selectedArea].locations.map((location) => (
-                <Grid item xs={12} sm={4} key={location.id}>
-                  <Box className="location-card">
-                    <Typography variant="h6" className="location-title">{location.name}</Typography>
-                    <Typography variant="body2" className="location-address">{location.address}</Typography>
-                    <Chip
-                      label={`Giá từ: ${location.price}`}
-                      color="primary"
-                      sx={{
-                        marginTop: '10px',
-                        fontWeight: 'bold',
-                        backgroundColor: '#FFD700',
-                        color: '#333',
-                      }}
-                    />
-                    {location.homeService && (
-                      <Box sx={{
-                        marginTop: '10px',
-                        padding: '6px 12px',
-                        backgroundColor: '#FFD700',
-                        color: '#333',
-                        borderRadius: '15px',
-                        fontWeight: '600',
-                        fontSize: '14px',
-                        display: 'inline-block',
-                        textTransform: 'capitalize',
-                        letterSpacing: '0.5px',
-                      }} >
-                        Dịch vụ tại nhà
-                      </Box>
-                    )}
-                    <Link to={`/location/${location.id}`} style={{ textDecoration: 'none' }}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                          marginTop: '20px',
-                          padding: '12px 25px',
-                          fontWeight: 'bold',
-                          backgroundColor: '#E91E63',
-                          '&:hover': { backgroundColor: '#D81B60' }
-                        }}
-                      >
-                        Xem chi tiết
-                      </Button>
-                    </Link>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        )}
+  const currentCenter = searchedPosition || userPosition;
+
+  useEffect(() => {
+    const storedUserPos = localStorage.getItem('userPosition');
+    const storedSearchPos = localStorage.getItem('searchedPosition');
+    const storedSearchAddr = localStorage.getItem('searchAddress');
+
+    if (storedUserPos) {
+      const parsed = JSON.parse(storedUserPos);
+      if (Array.isArray(parsed) && parsed.length === 2) {
+        setUserPosition(parsed);
+      }
+    }
+
+    if (storedSearchPos) {
+      const parsed = JSON.parse(storedSearchPos);
+      if (Array.isArray(parsed) && parsed.length === 2) {
+        setSearchedPosition(parsed);
+      }
+    }
+
+    if (storedSearchAddr) {
+      setSearchAddress(storedSearchAddr);
+    }
+
+    if (!storedUserPos && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const coords = [pos.coords.latitude, pos.coords.longitude];
+          if (isInDaNangBoundary(coords)) {
+            setUserPosition(coords);
+            localStorage.setItem('userPosition', JSON.stringify(coords));
+          } else {
+            setUserPosition([16.0471, 108.2062]);
+          }
+        },
+        (err) => {
+          console.error('Lỗi lấy vị trí:', err);
+          setUserPosition([16.0471, 108.2062]);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    if (searchedPosition) {
+      localStorage.setItem('searchedPosition', JSON.stringify(searchedPosition));
+    }
+  }, [searchedPosition]);
+
+  useEffect(() => {
+    if (searchAddress) {
+      localStorage.setItem('searchAddress', searchAddress);
+    } else {
+      localStorage.removeItem('searchAddress');
+      localStorage.removeItem('searchedPosition');
+      setSearchedPosition(null);
+    }
+  }, [searchAddress]);
+
+  const handleAddressSearch = async () => {
+    if (!searchAddress) return;
+    try {
+      const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+        params: {
+          q: `${searchAddress}, Đà Nẵng, Việt Nam`,
+          format: 'json',
+          limit: 1,
+          addressdetails: 1,
+        }
+      });
+
+      if (response.data.length > 0) {
+        const result = response.data[0];
+        const lat = parseFloat(result.lat);
+        const lon = parseFloat(result.lon);
+
+        if (!isInDaNangBoundary([lat, lon])) {
+          alert('Địa chỉ tìm được nằm ngoài thành phố Đà Nẵng.');
+          return;
+        }
+
+        setSearchedPosition([lat, lon]);
+      } else {
+        alert('Không tìm thấy địa chỉ trong khu vực Đà Nẵng.');
+      }
+    } catch (error) {
+      console.error('Lỗi khi tìm địa chỉ:', error);
+    }
+  };
+
+  const allLocations = Object.values(areas).flatMap(area => area.locations);
+
+  const nearbyLocations = currentCenter
+    ? allLocations.filter(loc => {
+        if (!loc.latlng || !isInDaNangBoundary(loc.latlng)) return false;
+        const dist = getDistance(
+          { latitude: currentCenter[0], longitude: currentCenter[1] },
+          { latitude: loc.latlng[0], longitude: loc.latlng[1] }
+        );
+        return dist <= 3000;
+      })
+    : [];
+
+  return (
+    <div style={{ paddingBottom: '50px' }}>
+      <Box sx={{ maxWidth: 500, mx: 'auto', mt: 4, mb: 2 }}>
+        <TextField
+          fullWidth
+          placeholder="Nhập địa chỉ bạn muốn tìm (chỉ trong Đà Nẵng)..."
+          value={searchAddress}
+          onChange={(e) => setSearchAddress(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleAddressSearch()}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleAddressSearch}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+        />
+      </Box>
+
+      <Typography variant="h4" sx={{ mb: 2, textAlign: 'center', color: '#E91E63', fontWeight: 'bold' }}>
+        Thợ nail gần {searchedPosition ? 'vị trí đã chọn' : 'bạn'}
+      </Typography>
+
+      <Grid container spacing={3} justifyContent="center">
+        {nearbyLocations.map(loc => (
+          <Grid item xs={12} sm={6} md={4} key={loc.id}>
+            <Box className="location-card">
+              <Typography variant="h6">{loc.name}</Typography>
+              <Typography variant="body2">{loc.address}</Typography>
+              <Chip label={`Giá từ: ${loc.price}`} sx={{ mt: 1, backgroundColor: '#FFD700', color: '#333', fontWeight: 'bold' }} />
+              {loc.homeService && (
+                <Box sx={{ mt: '10px', px: 2, py: 1, backgroundColor: '#FFD700', borderRadius: '15px', fontWeight: 600, fontSize: '14px', display: 'inline-block' }}>
+                  Dịch vụ tại nhà
+                </Box>
+              )}
+              <Link to={`/location/${loc.id}`} style={{ textDecoration: 'none' }}>
+                <Button variant="contained" sx={{ mt: 2, backgroundColor: '#E91E63', '&:hover': { backgroundColor: '#D81B60' } }}>
+                  Xem chi tiết
+                </Button>
+              </Link>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Box className="map-wrapper" sx={{ mt: 5 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>Bản đồ đề xuất:</Typography>
+        <div className="map-container">
+          <MapContainer
+            center={currentCenter || [16.0471, 108.2062]}
+            zoom={13}
+            scrollWheelZoom
+            style={{ height: '600px', width: '100%' }}
+          >
+            <MapCenterUpdater center={currentCenter} />
+            <ZoomToUserButton searchedPosition={searchedPosition} userPosition={userPosition} />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            {searchedPosition ? (
+              <Marker position={searchedPosition} icon={redIcon}>
+                <Popup>Vị trí bạn đã tìm</Popup>
+              </Marker>
+            ) : userPosition && (
+              <Marker position={userPosition} icon={redIcon}>
+                <Popup>Vị trí của bạn</Popup>
+              </Marker>
+            )}
+
+            {nearbyLocations.map(loc => (
+              <Marker key={loc.id} position={loc.latlng}>
+                <Popup>
+                  <strong>{loc.name}</strong><br />
+                  {loc.address}<br />
+                  {loc.price}<br />
+                  {currentCenter && (
+                    <>
+                      <br />
+                      Khoảng cách: {Math.round(getDistance(
+                        { latitude: loc.latlng[0], longitude: loc.latlng[1] },
+                        { latitude: currentCenter[0], longitude: currentCenter[1] }
+                      ) / 1000)} km
+                    </>
+                  )}
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </div>
       </Box>
     </div>
   );

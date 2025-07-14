@@ -17,31 +17,21 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   },
 }));
 
-
 const ActivitiesPage = () => {
-  const [historyData, setHistoryData] = useState([]); 
-  const [loading, setLoading] = useState(true); 
+  const [historyData, setHistoryData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const checkStatus = (bookingTime, bookingDate) => {
     const currentTime = dayjs();
-    const bookingDateTime = dayjs(`${bookingDate} ${bookingTime}`);  
-
+    const bookingDateTime = dayjs(`${bookingDate} ${bookingTime}`);
     const timeDifference = currentTime.diff(bookingDateTime, 'minute');
 
-   
-    console.log('Current Time:', currentTime.format());
-    console.log('Booking DateTime:', bookingDateTime.format());
-    console.log('Time Difference (minutes):', timeDifference);
-
     if (timeDifference < 0) {
-      
-      return 'Đang chờ'; 
+      return 'Đang chờ';
     } else if (timeDifference >= 0 && timeDifference <= 60) {
-    
-      return 'Đang tiến hành dịch vụ'; 
+      return 'Đang tiến hành dịch vụ';
     } else {
-    
-      return 'Đã hoàn thành'; 
+      return 'Đã hoàn thành';
     }
   };
 
@@ -72,15 +62,15 @@ const ActivitiesPage = () => {
 
       {historyData.length > 0 ? (
         historyData.map((historyItem, index) => {
-          const status = checkStatus(historyItem.time, historyItem.date); 
-          let statusColor = '';  
+          const status = checkStatus(historyItem.time, historyItem.date);
+          let statusColor = '';
 
           if (status === 'Đang chờ') {
-            statusColor = 'green';  
+            statusColor = 'green';
           } else if (status === 'Đang tiến hành dịch vụ') {
-            statusColor = '#ADD8E6';  
+            statusColor = '#ADD8E6';
           } else if (status === 'Đã hoàn thành') {
-            statusColor = '#E91E63';  
+            statusColor = '#E91E63';
           }
 
           return (
@@ -120,6 +110,10 @@ const ActivitiesPage = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
+                  <Typography variant="body1"><strong>Địa chỉ:</strong> {historyItem.address || 'Không có'}</Typography>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
                   <Typography variant="body1"><strong>Kỹ thuật viên:</strong> {historyItem.technicians}</Typography>
                 </Grid>
 
@@ -128,7 +122,6 @@ const ActivitiesPage = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-               
                   <Typography variant="body1">
                     <strong>Tổng Giá:</strong> {historyItem.totalPrice ? historyItem.totalPrice.toLocaleString() : 'Chưa có giá'}
                   </Typography>
@@ -138,8 +131,9 @@ const ActivitiesPage = () => {
           );
         })
       ) : (
-   
-        <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '50px' }}>Không có lịch sử đặt lịch.</Typography>
+        <Typography variant="body1" sx={{ textAlign: 'center', marginTop: '50px' }}>
+          Không có lịch sử đặt lịch.
+        </Typography>
       )}
     </Box>
   );

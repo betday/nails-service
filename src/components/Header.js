@@ -37,7 +37,7 @@ const Header = () => {
       <Grid container justifyContent="space-between" alignItems="center" className="header-content">
         
         <Grid item className="logo" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <img src={require('../assets/img/Logo.png')} alt="Logo" width="50" />
+          <img src={require('../assets/img/logo.jpg')} alt="Logo" width="80" />
           <Typography
             variant="h4"
             sx={{
