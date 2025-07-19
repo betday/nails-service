@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Grid, Box, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import accountApi from '../api/accountApi';
+import { setUserToLocal } from '../utils/auth';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const { login } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const res = await accountApi.login({ email, password }); // backend expects email & password
-      const { token, user } = res.data;
+      if (email === 'admin@example.com' && password === '123456') {
+        const mockUser = {
+          email,
+          name: 'Admin User',
+        };
 
-      login({ token, user });
-      navigate('/');
+      
+        setUserToLocal(mockUser);
+
+       
+        navigate('/');
+      } else {
+        throw new Error('Email hoặc mật khẩu không đúng');
+      }
     } catch (err) {
-      console.error('Login failed:', err.response?.data || err.message);
-      setErrorMessage('Email hoặc mật khẩu không đúng');
+      setErrorMessage(err.message || 'Đã xảy ra lỗi');
     }
   };
 
@@ -63,7 +69,9 @@ const LoginPage = () => {
           </form>
           {errorMessage && (
             <Box mt={2} color="red" textAlign="center">
-              <Typography variant="body2">{errorMessage}</Typography>
+              <Typography variant="body2" color="error">
+                {errorMessage}
+              </Typography>
             </Box>
           )}
         </Paper>

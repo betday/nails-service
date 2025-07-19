@@ -15,7 +15,6 @@ import axios from 'axios';
 import '../assets/css/servicespage.css';
 import areas from '../data/areasData';
 
-// Configure default marker
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
