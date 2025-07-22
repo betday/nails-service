@@ -46,7 +46,7 @@ const Header = () => {
             PINK
           </Typography>
         </Grid>
-
+        
         {/* Navbar */}
         <Grid item xs={12} md={6} sx={{ display: 'flex', justifyContent: 'center' }}>
           <nav>
@@ -60,6 +60,11 @@ const Header = () => {
                 <Link to="/about" style={{ textDecoration: 'none' }}>
                   <Button sx={navButtonStyle(isActive('/about'))}>Giới Thiệu</Button>
                 </Link>
+              </li> 
+              <li style={{ marginRight: '15px' }}>
+                <Link to="/blog" style={{ textDecoration: 'none' }}>
+                  <Button sx={navButtonStyle(isActive('/blog'))}>Blog</Button>
+                </Link>
               </li>
               <li style={{ marginRight: '15px' }}>
                 <Link to="/services" style={{ textDecoration: 'none' }}>
@@ -71,7 +76,8 @@ const Header = () => {
                   <Link to="/activities" style={{ textDecoration: 'none' }}>
                     <Button sx={navButtonStyle(isActive('/activities'))}>Hoạt Động Của Bạn</Button>
                   </Link>
-                </li>
+                </li> 
+                
               )}
             </ul>
           </nav>

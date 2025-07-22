@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 
 
+
 const HomePage = React.lazy(() => import('./components/HomePage'));
 const ServicesPage = React.lazy(() => import('./components/ServicesPage'));
 const BookAppointmentPage = React.lazy(() => import('./components/BookAppointmentPage'));
@@ -20,6 +21,10 @@ const NotFoundPage = () => (
     <p>The page you are looking for does not exist.</p>
   </div>
 );
+
+const ProfilePage = React.lazy(() => import('./components/ProfilePage'));
+const BlogPage = React.lazy(() => import('./components/BlogPage'));
+const ContactPage = React.lazy(() => import('./components/ContactPage'));
 
 const App = () => {
   return (
@@ -41,7 +46,10 @@ const App = () => {
                 <Route path="/activities" element={<ActivitiesPage />} />
                 <Route path="/location/:id" element={<LocationDetailPage />} />
                 <Route path="/about" element={<AboutPage />} /> 
-                <Route path="*" element={<NotFoundPage />} /> 
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="*" element={<NotFoundPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/contact" element={<ContactPage />} />
               </Routes>
             </Suspense>
           </main>

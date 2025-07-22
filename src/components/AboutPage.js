@@ -76,10 +76,10 @@ const AboutPage = () => {
                   transition={{ duration: 0.5, delay: 2.3 }}
                 />
                 <Typography variant="h5" className="service-title">
-                  Dịch Vụ 1
+                  Dịch Vụ Gel Nails (Sơn Móng Gel)
                 </Typography>
                 <Typography variant="body2" className="service-description">
-                  Mô tả ngắn gọn về dịch vụ 1.
+                  Móng bền đẹp 2-3 tuần với lớp gel ánh bóng, không hại móng tự nhiên.
                 </Typography>
               </Box>
             </Grid>
@@ -96,10 +96,10 @@ const AboutPage = () => {
                   transition={{ duration: 0.5, delay: 2.5 }}
                 />
                 <Typography variant="h5" className="service-title">
-                  Dịch Vụ 2
+                  Dịch Vụ Nail Art (Vẽ Nghệ Thuật)
                 </Typography>
                 <Typography variant="body2" className="service-description">
-                  Mô tả ngắn gọn về dịch vụ 2.
+                  Thỏa sức sáng tạo với họa tiết vẽ tay tinh xảo theo phong cách riêng.
                 </Typography>
               </Box>
             </Grid>
@@ -116,10 +116,10 @@ const AboutPage = () => {
                   transition={{ duration: 0.5, delay: 2.7 }}
                 />
                 <Typography variant="h5" className="service-title">
-                  Dịch Vụ 3
+                  Dịch Vụ Chăm Sóc Móng Toàn Diện 
                 </Typography>
                 <Typography variant="body2" className="service-description">
-                  Mô tả ngắn gọn về dịch vụ 3.
+                  Quy trình chăm sóc tiêu chuẩn spa, kết hợp massage thư giãn.
                 </Typography>
               </Box>
             </Grid>

@@ -3,6 +3,8 @@ import { Box, Typography, Grid, Button } from '@mui/material';
 import AOS from 'aos';
 import 'aos/dist/aos.css'; 
 import '../assets/css/HomePage.css'; 
+import NotificationDemo from "./NotificationDemo";
+import { Link } from 'react-router-dom';
 
 
 const HomePage = () => {
@@ -25,10 +27,20 @@ const HomePage = () => {
 
  
       <Box className="banner">
-        <Typography variant="h2" className="title">Dịch Vụ Làm Nails Chuyên Nghiệp</Typography>
-        <Typography variant="h5" className="description">Đặt lịch ngay để trải nghiệm dịch vụ đẳng cấp tại nhà hoặc tiệm.</Typography>
-        <Button variant="contained" color="secondary" size="large">Đặt lịch ngay</Button>
-      </Box>
+      <Typography variant="h2" className="title">Dịch Vụ Làm Nails Chuyên Nghiệp</Typography>
+      <Typography variant="h5" className="description">
+        Đặt lịch ngay để trải nghiệm dịch vụ đẳng cấp tại nhà hoặc tiệm.
+      </Typography>
+      <Button 
+        component={Link} 
+        to="/services" 
+        variant="contained" 
+        color="secondary" 
+        size="large"
+      >
+        Đặt lịch ngay
+      </Button>
+    </Box>
 
       <Box className="blog-section">
         <Typography variant="h4" className="section-title" data-aos="fade-up">BLOG PINK</Typography>
@@ -58,10 +70,14 @@ const HomePage = () => {
 
         
         <Box className="see-more-button">
-          <Button variant="contained" className="button">Xem Thêm</Button>
+          <Button component={Link} 
+        to="/blog" 
+        variant="contained" 
+        color="secondary" 
+        size="large"
+          >Xem Thêm</Button>
         </Box>
       </Box>
-
       
       
 
@@ -80,8 +96,14 @@ const HomePage = () => {
             <Typography variant="body1" className="nailroom-description">
               Bởi thế, slogan của Pink là “Ai cũng có thể trở nên đẹp hơn”. Đến với Pink và ra về như những phụ nữ xinh đẹp hơn, hạnh phúc hơn là điều chúng mình hướng tới.
             </Typography>
-            <Button className="button" sx={{ marginRight: '20px' }}>Giới Thiệu</Button>
-            <Button className="button">Hệ Thống Pink Beauty Hub</Button>
+            
+            <Button component={Link} 
+        to="/about" 
+        variant="contained" 
+        color="secondary" 
+        size="large"
+          >Giới Thiệu</Button>
+            
           </Grid>
         </Grid>
       </Box>
@@ -92,25 +114,29 @@ const HomePage = () => {
           <Grid item xs={12} sm={4}>
             <Box className="achievement-card">
               <Typography variant="h6" className="card-title">Liên Kết Với Đối Tác Tốt</Typography>
-              <Typography variant="body2" className="card-description">Chúng tôi hợp tác với các đối tác uy tín, giúp cung cấp dịch vụ và sản phẩm chất lượng cao nhất.</Typography>
+              <Typography variant="body2" className="card-description">Chúng tôi tự hào xây dựng mạng lưới hợp tác bền vững với các tập đoàn, tổ chức và nhà cung cấp đạt chuẩn quốc tế. Mỗi đối tác đều trải qua quy trình tuyển chọn khắt khe về năng lực, kinh nghiệm và tiêu chuẩn đạo đức kinh doanh. Nhờ đó, khách hàng được tiếp cận giải pháp tối ưu với công nghệ tiên tiến nhất, đi kèm dịch vụ hỗ trợ 24/7 từ đội ngũ chuyên gia giàu kinh nghiệm.</Typography>
             </Box>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Box className="achievement-card">
               <Typography variant="h6" className="card-title">Điều Khoản Minh Bạch</Typography>
-              <Typography variant="body2" className="card-description">Chúng tôi cam kết về các điều khoản minh bạch và rõ ràng cho tất cả khách hàng.</Typography>
+              <Typography variant="body2" className="card-description">Mọi thỏa thuận đều được thể hiện bằng văn bản rõ ràng với ngôn ngữ pháp lý dễ hiểu. Chúng tôi áp dụng cơ chế giải trình tự động, cho phép khách hàng theo dõi tiến độ dịch vụ theo thời gian thực. Cam kết không phát sinh chi phí ẩn, không điều khoản mập mờ - tất cả nhằm thiết lập niềm tin vững chắc ngay từ lần hợp tác đầu tiên.</Typography>
             </Box>
           </Grid>
           <Grid item xs={12} sm={4}>
             <Box className="achievement-card">
               <Typography variant="h6" className="card-title">Chính Sách Bảo Hành</Typography>
-              <Typography variant="body2" className="card-description">Chúng tôi cung cấp chính sách bảo hành dịch vụ để đảm bảo sự hài lòng của khách hàng.</Typography>
+              <Typography variant="body2" className="card-description">Hệ thống bảo hành linh hoạt được thiết kế theo từng phân khúc sản phẩm/dịch vụ, bao gồm:
+✓ Bảo trì định kỳ miễn phí
+✓ Hỗ trợ khẩn cấp trong 2 giờ làm việc
+✓ Hoàn tiền 100% nếu không đạt cam kết ban đầu
+✓ Gia hạn bảo hành lên đến 36 tháng cho khách hàng thân thiết</Typography>
             </Box>
           </Grid>
         </Grid>
       </Box>
 
-      
+      <NotificationDemo />
     </div>
   );
 };
